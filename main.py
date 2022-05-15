@@ -1,5 +1,8 @@
 from flask import Flask, request
 import json
+import sqlite3
+
+db = sqlite3.connect('db.sqlite3')
 
 app = Flask(__name__)
 
@@ -8,7 +11,9 @@ def getMessage():
     if request.method == "POST":
         input_data = request.data
         json_data = json.loads(input_data)
-        print(json_data)
+        cur = db.cursor()
+        cur.execute('INSERT INTO messages VALUES (?, ?, ?)', (json_data['from'], json_data['to'], json_data['message']))
+        cur.close()
     return {'msg' : 1}
     
 if __name__ == '__main__':
