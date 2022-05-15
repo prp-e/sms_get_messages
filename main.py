@@ -10,6 +10,7 @@ app = Flask(__name__)
 def getMessage():
     if request.method == "POST":
         input_data = request.data
+        print(input_data)
         json_data = json.loads(input_data)
         try:
             f = open('result.txt', 'a')
