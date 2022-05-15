@@ -25,7 +25,9 @@ def getMessage():
         input_data = request.data
         json_data = json.loads(input_data)
         try:
+            cur = get_db().cursor()
             cur.execute('INSERT INTO messages (from_number, to_number, message) VALUES (?, ?, ?)', (json_data['from'], json_data['to'], json_data['message']))
+            cur.close()
             return {'msg' : 'success'}, 200
         except Exception as e:
             print(e)
