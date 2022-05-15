@@ -1,8 +1,9 @@
 from flask import Flask, request
 import json
 import sqlite3
+from uuid import uuid4
 
-db = sqlite3.connect('db.sqlite3')
+db = sqlite3.connect('db.sqlite3', check_same_thread=False)
 
 app = Flask(__name__)
 
@@ -13,11 +14,12 @@ def getMessage():
         json_data = json.loads(input_data)
         try:
             cur = db.cursor()
-            cur.execute('INSERT INTO messages VALUES (?, ?, ?)', (json_data['from'], json_data['to'], json_data['message']))
+            cur.execute('INSERT INTO messages (from_number, to_number, message) VALUES (?, ?, ?)', (json_data['from'], json_data['to'], json_data['message']))
             cur.close()
 
             return {'msg' : 'success'}, 200
-        except:
+        except Exception as e:
+            print(e)
             return {'msg' : 'fail'}, 400 
     
 if __name__ == '__main__':
